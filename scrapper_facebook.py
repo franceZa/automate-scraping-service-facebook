@@ -20,7 +20,7 @@ from google.cloud import storage
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 import requests
 
-class scrap_cafestorythailand(object):
+class scraper(object):
     def __init__(self, is_init_load, browser):
 
         self.is_init_load = is_init_load
@@ -30,17 +30,13 @@ class scrap_cafestorythailand(object):
         self.line_token = self.conf['user']['line_token']
         self.url = 'https://notify-api.line.me/api/notify'
         self.headers = {'content-type':'application/x-www-form-urlencoded','Authorization':'Bearer '+self.line_token}
-        #print('x')
-    def execute(self):
-        #print('x')
-        wd = self.browser
 
+    def execute(self):
+        wd = self.browser
         wd.get("https://facebook.com")
         wait = WebDriverWait(wd, 30)
-
         #login to facebook 
         # Read YAML file
-        
         user_id = self.conf['user']['username']
         my_password = self.conf['user']['password']
         user_name_obj = wd.find_element(By.XPATH,"//input[@type='text']")
@@ -50,16 +46,15 @@ class scrap_cafestorythailand(object):
         log_in_bottom = wd.find_element(By.XPATH,"//button[@name='login']")
         log_in_bottom.click()
 
-        wait.until(EC.url_changes('https://www.facebook.com/cafestorythailand/'))
-        wd.get('https://www.facebook.com/cafestorythailand/')
-
+        # url changes to facebook prayutofficial
+        wait.until(EC.url_changes('https://www.facebook.com/prayutofficial'))
+        wd.get('https://www.facebook.com/prayutofficial')
 
         # store text data
-
         message_key = []
         raw_text={}
 
-
+        #หน่วงเวลาให้ facebook โหลดทัน
         PAUSE_TIME = 5
 
         # Get scroll height
@@ -70,13 +65,8 @@ class scrap_cafestorythailand(object):
             try:
                 wd.execute_script("window.scrollTo({ left: 0, top: document.body.clientHeight, behavior: 'smooth' })")
                 new_height = wd.execute_script("return document.body.scrollHeight")
-                #print(f'new_height {new_height}')
                 # set wait for load web page
-
-                #sleep = int(np.log(new_height))
                 time.sleep(PAUSE_TIME)
-                #print(f'sleep {sleep}')
-
                 # cick all See more buton
                 see_more_list = wd.find_elements(By.XPATH, "//*[(text()='See more' or text()='ดูเพิ่มเติม')]")
                 for s in see_more_list:
@@ -92,15 +82,13 @@ class scrap_cafestorythailand(object):
 
                 for index,a in enumerate(article_list):
                     id_ = str(a.get_attribute('aria-describedby')).split(' ')   
-                    #up_load_block = id_[0]
                     text_block = id_[1]
                     # if already have an article then pass 
                     if (text_block in message_key) ==False :
                         message_key.append(text_block)
                         # store article i to raw_text 
                         raw_text[text_block] = all_text_list[index].text
-                #print(f'article_list {len(article_list)}')
-                #print(f'raw_text_list {len(all_text_list)}')
+       
                 return new_height
             except NoSuchElementException:
                 # error failed: Element not found. (0x490)
@@ -125,22 +113,14 @@ class scrap_cafestorythailand(object):
             text_value.append(v)
 
         df = pd.DataFrame({'id':ID,'text':text_value})
-        #print(df)
         current_dateTime = datetime.now().strftime('%y-%m-%d')
+        #token for access cloud storage
         os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'conf/secret-bucksaw-369808-389cbbff5ede.json'
-        df.to_parquet(f"gs://review_data_set/raw_data/cafestorythailand/cafestorythailand_data_{current_dateTime}.parquet")
-        
-        
-
-        msg = f'cafestorythailand_data_{current_dateTime} ok'
+        df.to_parquet(f"gs://review_data_set/raw_data/prayutofficial/prayutofficial_data_{current_dateTime}.parquet")
+        # line alert 
+        msg = f'prayutofficial_data_{current_dateTime} ok'
         r = requests.post(self.url, headers=self.headers, data = {'message':msg})
-        #print (r.text)
+  
 
-
-    #docker build -t cafe:1 .
-    #Flask==1.1.1
-    # gunicorn==20.0.4
-    # selenium==3.141.0
-    # chromedriver-binary==79.0.3945.36    
 
 

@@ -4,7 +4,7 @@ from flask import Flask, send_file
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import chromedriver_binary  # Adds chromedriver binary to path
-import cafestorythailand 
+import scrapper_facebook
 import time
 import requests
 import os
@@ -27,13 +27,9 @@ browser = webdriver.Chrome(chrome_options=chrome_options)
 
 @app.route("/",methods=[ "POST","GET"])
 def home():
-    # browser.get("https://www.shopmoment.com") # for test
-    # file_name = 'test.png'
-    # browser.save_screenshot(file_name)
-    # return send_file(file_name)
 
     is_init_load = False
-    app_cafe = cafestorythailand.scrap_cafestorythailand(is_init_load,browser)
+    app_cafe = scrapper_facebook.scraper(is_init_load,browser)
     app_cafe.execute()
     #browser.close()
     return ('hello world!',204)
