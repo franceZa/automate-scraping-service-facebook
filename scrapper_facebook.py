@@ -32,17 +32,19 @@ class scraper(object):
         self.headers = {'content-type':'application/x-www-form-urlencoded','Authorization':'Bearer '+self.line_token}
 
     def execute(self):
-        wd = self.browser
-        wd.get("https://facebook.com")
+        wd = self.browser # selenium.webdriver
+        wd.get("https://facebook.com") # route to facebook login
         wait = WebDriverWait(wd, 30)
         #login to facebook 
-        # Read YAML file
+        # Read YAML file 
         user_id = self.conf['user']['username']
         my_password = self.conf['user']['password']
+        # find location of input text field 
         user_name_obj = wd.find_element(By.XPATH,"//input[@type='text']")
         user_name_obj.send_keys(user_id)
         password_obj = wd.find_element(By.XPATH,"//input[@type='password']")
         password_obj.send_keys(my_password)
+        # find location of login button
         log_in_bottom = wd.find_element(By.XPATH,"//button[@name='login']")
         log_in_bottom.click()
 
