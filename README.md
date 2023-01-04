@@ -1,5 +1,5 @@
 # Automating Facebook WebScraping service using Cloud Run
-Automate the process of getting the latest post from cafestorythailand by using Cloud Run.
+Automate the process of getting the latest post from webpage by using Cloud Run.
 every day at 11pm Cloud Scheduler will send a HTTP POST request to Cloud Run, Cloud Run will start the automation by referencing the step in Dockerfile. The Dockerfile will create a docker container with:
 
 * Python 3.10 image
