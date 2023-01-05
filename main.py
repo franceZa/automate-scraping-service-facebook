@@ -19,6 +19,7 @@ prefs = {"profile.default_content_setting_values.notifications" : 2} # block not
 chrome_options.add_experimental_option("prefs",prefs)
 browser = webdriver.Chrome(chrome_options=chrome_options)
 
+
 @app.route("/",methods=[ "POST","GET"])
 def home():
 
